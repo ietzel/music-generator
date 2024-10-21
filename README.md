@@ -2,7 +2,7 @@ Combinatorics & series/sequences: may be used to determine the number of possibl
 
 Currently need fix for changing bpm from 100 to range of 96-144.
 
-To-do tracks: latch, don't want to fall in love, livin la vida loca, a dream more scarlet than red, I love your smile, los peces en el rio, fadeaway, you're the only, etc.
+To-do: latch, don't want to fall in love, livin la vida loca, a dream more scarlet than red, I love your smile, los peces en el rio, fadeaway, you're the only, etc.
 
 source: https://youtu.be/6PFf6klllAE?si=naimBok8WM8PNfgL
 
