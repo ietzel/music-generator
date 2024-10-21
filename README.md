@@ -2,6 +2,6 @@ Combinatorics & series/sequences: may be used to determine the number of possibl
 
 Currently, bpm fix in need for changing bpm from 100.
 
-https://youtu.be/6PFf6klllAE?si=naimBok8WM8PNfgL
+source: https://youtu.be/6PFf6klllAE?si=naimBok8WM8PNfgL
 
 instrument families: https://www.cs.cmu.edu/~music/cmsip/readings/GMSpecs_Patches.htm
