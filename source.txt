@@ -295,4 +295,4 @@ int main()
     return 0;
 }
 
-//https://www.cs.cmu.edu/~music/cmsip/readings/GMSpecs_Patches.htm
+//https://www.cs.cmu.edu/~music/cmsip/readings/GMSpecs_Patches.htm includes Piano, Percussion, Organ, Guitar, Bass, Strings, Ensemble, Brass, Lead, Pad, Effects, Ethnic, Percuissive, Sound, in addition to drumkit/c10 assignments.
