@@ -1,4 +1,4 @@
-Combinatorics & series/sequences: may be used to determine the number of possible songs written, and to define means in which to algorithmically create them.
+Series/sequences may be used to define means in which to algorithmically create songs.
 
 Currently need fix for changing bpm from 100 to range of 96-144.
 
