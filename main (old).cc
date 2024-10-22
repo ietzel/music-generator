@@ -243,11 +243,13 @@ int main()
     static char patches[16] = {};
     for (int i = 0; i < 16; i++)
     {
-        int instrument = std::rand() * 128;
-        if (instrument > 127)
+        int instrument = std::rand() * 8;
+        if (instrument > 8)
         {
-            instrument = 127;
+            instrument = 7;
         }
+        instrument = floor(instrument + 1);
+        instrument = instrument + (i*16)
         patches[i] = instrument;
     }
     for (unsigned c = 0; c < 16; ++c)
