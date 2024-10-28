@@ -238,19 +238,14 @@ int main()
     }
     MIDIfile file;
     file.AddLoopStart();
-
+    static char instruments [15] = {2, 3, 8, 12, 18, 27, 37, 52, 55, 58, 64, 67, 79, 80, 106}
     /* Choose instruments ("patches") for each channel: */
     static char patches[16] = {};
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 15; i++)
     {
-        int instrument = std::rand() * 8;
-        if (instrument > 8)
-        {
-            instrument = 7;
-        }
-        instrument = floor(instrument + 1);
-        instrument = instrument + (i*16)
-        patches[i] = instrument;
+            int index = std::rand() * 15;
+            instrument = floor(index + 1);
+            patches[i] = instruments[index];   
     }
     for (unsigned c = 0; c < 16; ++c)
         if (c != 10) // Patch any other channel but not the percussion channel.
