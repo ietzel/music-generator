@@ -122,10 +122,10 @@ public:
         MIDItrack &result = tracks[trackno];
         if (result.empty())
         {
-            //      time signature: 4/2
+            //      time signature: 4/4
             //      ticks/metro:    32
             //      32nd per 1/4:   8
-            result.AddMetaEvent(0x58, 4, 4, 2, 32, 8);
+            result.AddMetaEvent(0x58, 4, 4, 4, 32, 8);
             // Meta 0x51 (tempo):
             result.AddMetaEvent(0x51, 3, tempo >> 16, tempo >> 8, tempo);
         }
