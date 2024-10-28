@@ -238,14 +238,13 @@ int main()
     }
     MIDIfile file;
     file.AddLoopStart();
-    static char instruments [15] = {2, 3, 8, 12, 18, 27, 37, 52, 55, 58, 64, 67, 79, 80, 106}
+    static char instruments[15] = {2, 3, 8, 12, 18, 27, 37, 52, 55, 58, 64, 67, 79, 80, 106};
     /* Choose instruments ("patches") for each channel: */
     static char patches[16] = {};
     for (int i = 0; i < 15; i++)
     {
-            int index = std::rand() * 15;
-            instrument = floor(index + 1);
-            patches[i] = instruments[index];   
+        int index = std::rand() % 15;
+        patches[i] = instruments[index];
     }
     for (unsigned c = 0; c < 16; ++c)
         if (c != 10) // Patch any other channel but not the percussion channel.
@@ -295,11 +294,11 @@ int main()
             file.AddLoopEnd();
     }
 
-file.Finish();
+    file.Finish();
 
-FILE *fp = std::fopen("test.mid", "wb");
-std::fwrite(&file.at(0), 1, file.size(), fp);
-std::fclose(fp);
+    FILE *fp = std::fopen("test.mid", "wb");
+    std::fwrite(&file.at(0), 1, file.size(), fp);
+    std::fclose(fp);
 
-return 0;
+    return 0;
 }
