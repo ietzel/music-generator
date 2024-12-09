@@ -260,7 +260,7 @@ public:
     MidiFile midi;
 public:
     bool OnUserCreate() override {
-        midi.ParseFile("Fadeaway.mid");
+        midi.ParseFile("audio and or visual/Fadeaway.mid");
         return true;
     }
     bool OnUserUpdate(float fElapsedTime) override {
