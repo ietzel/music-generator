@@ -1,69 +1,8 @@
-/*
-	Programming MIDI: Parsing, Displaying (& Playing) MIDI Files
-	"Better get these done before im virused..." - javidx9
-
-	License (OLC-3)
-	~~~~~~~~~~~~~~~
-
-	Copyright 2018-2020 OneLoneCoder.com
-
-	Redistribution and use in source and binary forms, with or without
-	modification, are permitted provided that the following conditions
-	are met:
-
-	1. Redistributions or derivations of source code must retain the above
-	copyright notice, this list of conditions and the following disclaimer.
-
-	2. Redistributions or derivative works in binary form must reproduce
-	the above copyright notice. This list of conditions and the following
-	disclaimer must be reproduced in the documentation and/or other
-	materials provided with the distribution.
-
-	3. Neither the name of the copyright holder nor the names of its
-	contributors may be used to endorse or promote products derived
-	from this software without specific prior written permission.
-
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-	HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-	SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-	LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-	THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-	Relevant Video: https://youtu.be/040BKtnDdg0
-
-	Links
-	~~~~~
-	YouTube:	https://www.youtube.com/javidx9
-				https://www.youtube.com/javidx9extra
-	Discord:	https://discord.gg/WhwHUMV
-	Twitter:	https://www.twitter.com/javidx9
-	Twitch:		https://www.twitch.tv/javidx9
-	GitHub:		https://www.github.com/onelonecoder
-	Patreon:	https://www.patreon.com/javidx9
-	Homepage:	https://www.onelonecoder.com
-	
-	Community:	https://community.onelonecoder.com
-
-	Author
-	~~~~~~
-	David Barr, aka javidx9, ©OneLoneCoder 2018, 2019, 2020
-*/
-
-
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
 
 #include <fstream>
 #include <array>
-
-//#pragma comment(lib, "winmm.lib")
-
 
 struct MidiEvent
 {
@@ -78,7 +17,6 @@ struct MidiEvent
 	uint8_t nVelocity = 0;
 	uint32_t nDeltaTick = 0;
 };
-
 
 struct MidiNote
 {
@@ -97,7 +35,6 @@ struct MidiTrack
 	uint8_t nMaxNote = 64;
 	uint8_t nMinNote = 64;
 };
-
 
 class MidiFile
 {
@@ -150,28 +87,20 @@ public:
 
 	bool ParseFile(const std::string& sFileName)
 	{
-		// Open the MIDI File as a stream
 		std::ifstream ifs;
 		ifs.open(sFileName, std::fstream::in | std::ios::binary);
 		if (!ifs.is_open())
 			return false;
-
-
-		// Helper Utilities ====================
-
-		// Swaps byte order of 32-bit integer
 		auto Swap32 = [](uint32_t n)
 		{
 			return (((n >> 24) & 0xff) | ((n << 8) & 0xff0000) | ((n >> 8) & 0xff00) | ((n << 24) & 0xff000000));
 		};
 
-		// Swaps byte order of 16-bit integer
 		auto Swap16 = [](uint16_t n)
 		{
 			return ((n >> 8) | (n << 8));
 		};
 
-		// Reads nLength bytes form file stream, and constructs a text string
 		auto ReadString = [&ifs](uint32_t nLength)
 		{
 			std::string s;
@@ -179,29 +108,20 @@ public:
 			return s;
 		};
 
-		// Reads a compressed MIDI value. This can be up to 32 bits long. Essentially if the first byte, first
-		// bit is set to 1, that indicates that the next byte is required to construct the full word. Only
-		// the bottom 7 bits of each byte are used to construct the final word value. Each successive byte 
-		// that has MSB set, indicates a further byte needs to be read.
 		auto ReadValue = [&ifs]()
 		{
 			uint32_t nValue = 0;
 			uint8_t nByte = 0;
 
-			// Read byte
 			nValue = ifs.get();
 
-			// Check MSB, if set, more bytes need reading
 			if (nValue & 0x80)
 			{
-				// Extract bottom 7 bits of read byte
+
 				nValue &= 0x7F;
 				do
 				{
-					// Read next byte
 					nByte = ifs.get();
-
-					// Construct value by setting bottom 7 bits, then shifting 7 bits
 					nValue = (nValue << 7) | (nByte & 0x7F);
 				} 
 				while (nByte & 0x80); // Loop whilst read byte MSB is 1
@@ -553,67 +473,11 @@ public:
 				{
 					FillRect((note.nStartTime - nTrackOffset) / nTimePerColumn, (nNoteRange - (note.nKey - track.nMinNote)) * nNoteHeight + nOffsetY, note.nDuration / nTimePerColumn, nNoteHeight, olc::WHITE);
 				}
-				 
 				nOffsetY += (nNoteRange + 1) * nNoteHeight + 4;
 			}
 		}
-
-		// BELOW - ABSOLUTELY HORRIBLE BODGE TO PLAY SOUND
-		// DO NOT USE THIS CODE...
-		
-		/*
-		dRunTime += fElapsedTime;
-		uint32_t nTempo = 4;
-		int nTrack = 1;
-		while (dRunTime >= 1.0 / double(midi.m_nBPM * 8))
-		{
-			dRunTime -= 1.0 / double(midi.m_nBPM * 8);
-
-			// Single MIDI Clock
-			nMidiClock++;
-
-			int i = 0;
-			int nTrack = 1;
-			//for (nTrack = 1; nTrack < 3; nTrack++)
-			{
-				if (nCurrentNote[nTrack] < midi.vecTracks[nTrack].vecEvents.size())
-				{
-					if (midi.vecTracks[nTrack].vecEvents[nCurrentNote[nTrack]].nDeltaTick == 0)
-					{
-						uint32_t nStatus = 0;
-						uint32_t nNote = midi.vecTracks[nTrack].vecEvents[nCurrentNote[nTrack]].nKey;
-						uint32_t nVelocity = midi.vecTracks[nTrack].vecEvents[nCurrentNote[nTrack]].nVelocity;
-
-						if (midi.vecTracks[nTrack].vecEvents[nCurrentNote[nTrack]].event == MidiEvent::Type::NoteOn)
-							nStatus = 0x90;
-						else
-							nStatus = 0x80;
-
-						midiOutShortMsg(hInstrument, (nVelocity << 16) | (nNote << 8) | nStatus);
-						nCurrentNote[nTrack]++;
-					}
-					else
-						midi.vecTracks[nTrack].vecEvents[nCurrentNote[nTrack]].nDeltaTick--;
-				}
-			}
-		}
-
-		if (GetKey(olc::Key::SPACE).bPressed)
-		{
-			midiOutShortMsg(hInstrument, 0x00403C90);
-		}
-
-		if (GetKey(olc::Key::SPACE).bReleased)
-		{
-			midiOutShortMsg(hInstrument, 0x00003C80);
-		}
-		*/
-
-
 		return true;
 	}
-
-	
 };
 
 int main()
